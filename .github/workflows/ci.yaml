@@ -50,8 +50,6 @@ jobs:
         # Step 1: Securely copy the WAR file to the /home/ubuntu/ directory (staging area)
         scp -i key.pem -o StrictHostKeyChecking=no target/emraay-bank-app.war ubuntu@35.183.97.187:/home/ubuntu/emraay-bank-app.war
         
-        # Step 2: SSH into the server as 'ubuntu' and use 'sudo' to move the file
-        #         to the correct /opt/tomcat/webapps/ directory, fix ownership, and restart tomcat.
         ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@35.183.97.187 "
           echo 'Moving file to webapps directory...'
           sudo mv /home/ubuntu/emraay-bank-app.war /opt/tomcat/webapps/
@@ -59,3 +57,4 @@ jobs:
           sudo chown tomcat:tomcat /opt/tomcat/webapps/emraay-bank-app.war
           echo 'Restarting Tomcat service...'
           sudo systemctl restart tomcat
+        "
