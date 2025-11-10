@@ -32,6 +32,7 @@ function initializeLoginPage() {
     addKeyboardShortcuts();
 }
 
+// Handle login form submission
 function handleLoginSubmit(e) {
     const form = e.target;
     const formData = new FormData(form);
