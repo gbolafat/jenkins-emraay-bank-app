@@ -7,7 +7,7 @@
 
     <groupId>com.emraay.bank</groupId>
     <artifactId>emraay-bank-app</artifactId>
-    <version>1.0.0</version>
+    <version>1.2.0</version>
     <packaging>war</packaging>
 
     <name>Emraay Bank Application</name>
