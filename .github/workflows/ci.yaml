@@ -40,7 +40,22 @@ jobs:
         echo "$SSH_PRIVATE_KEY" > key.pem
         chmod 600 key.pem
 
-    - name: Deploy to Tomcat via SCP
+    # - name: Deploy to Tomcat via SCP
+    #   run: |
+    #     scp -i key.pem -o StrictHostKeyChecking=no target/emraay-bank-app.war ubuntu@35.183.97.187:/opt/tomcat/webapps/
+    #     ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@35.183.97.187 "sudo systemctl restart tomcat"
+    
+    - name: Deploy to Tomcat via SCP and Move
       run: |
-        scp -i key.pem -o StrictHostKeyChecking=no target/emraay-bank-app.war tomcat@35.183.97.187:/opt/tomcat/webapps/
-        ssh -i key.pem -o StrictHostKeyChecking=no tomcat@35.183.97.187 "sudo systemctl restart tomcat"
+        # Step 1: Securely copy the WAR file to the /home/ubuntu/ directory (staging area)
+        scp -i key.pem -o StrictHostKeyChecking=no target/emraay-bank-app.war ubuntu@35.183.97.187:/home/ubuntu/emraay-bank-app.war
+        
+        # Step 2: SSH into the server as 'ubuntu' and use 'sudo' to move the file
+        #         to the correct /opt/tomcat/webapps/ directory, fix ownership, and restart tomcat.
+        ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@35.183.97.187 "
+          echo 'Moving file to webapps directory...'
+          sudo mv /home/ubuntu/emraay-bank-app.war /opt/tomcat/webapps/
+          echo 'Fixing file permissions...'
+          sudo chown tomcat:tomcat /opt/tomcat/webapps/emraay-bank-app.war
+          echo 'Restarting Tomcat service...'
+          sudo systemctl restart tomcat
